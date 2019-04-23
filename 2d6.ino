@@ -33,7 +33,7 @@ byte state = STATE_MODE;
 // display.
 //
 byte ledPins[] = {
-	// bottom pins, left to right
+  // bottom pins, left to right
   2, // index 0, arduino 2, led 1
   3, // index 1, arduino 3, led 2
      //                     led 3 - ground
