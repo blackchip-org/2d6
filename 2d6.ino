@@ -95,7 +95,7 @@ unsigned long ledLastSwap = now;
 #define LED_SWAP_INTERVAL 5
 
 void updateDisplay() {
-	// Time to swap the displays?
+  // Time to swap the displays?
   if (!(now - ledLastSwap > LED_SWAP_INTERVAL)) {
     return;
   }
@@ -206,18 +206,18 @@ void updateRoll() {
 }
 
 void nextMode() {
-    mode = (mode + 1) % 2;
-    updateMode();
+  mode = (mode + 1) % 2;
+  updateMode();
 }
 
 void updateMode() {
-    if (mode == MODE_1D6) {
-        leds[0] = numbers[1];
-        leds[1] = letterD;
-    } else if (mode == MODE_2D6) {
-        leds[0] = numbers[2];
-        leds[1] = letterD;
-    }
+  if (mode == MODE_1D6) {
+    leds[0] = numbers[1];
+    leds[1] = letterD;
+  } else if (mode == MODE_2D6) {
+    leds[0] = numbers[2];
+    leds[1] = letterD;
+  }
 }
 
 // Keep track of the last known state of the button to know
@@ -245,26 +245,26 @@ void checkButton() {
 }
 
 void setup() {
-    Serial.begin(9600);
-		Serial.println("\n2d6 version " VERSION);
+  Serial.begin(9600);
+  Serial.println("\n2d6 version " VERSION);
 
-    for (int i = 0; i < 8; i++) {
-        pinMode(ledPins[i], OUTPUT);
-    }
-    pinMode(transPins[0], OUTPUT);
-    pinMode(transPins[0], OUTPUT);
-    pinMode(rollButtonPin, INPUT_PULLUP);
-    pinMode(modeButtonPin, INPUT_PULLUP);
+  for (int i = 0; i < 8; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+  pinMode(transPins[0], OUTPUT);
+  pinMode(transPins[0], OUTPUT);
+  pinMode(rollButtonPin, INPUT_PULLUP);
+  pinMode(modeButtonPin, INPUT_PULLUP);
 
-    updateMode();
-    Entropy.initialize();
+  updateMode();
+  Entropy.initialize();
 }
 
 void loop() {
-    now = millis();
-    checkButton();
-    if (state == STATE_ROLL) {
-        updateRoll();
-    }
-    updateDisplay();
+  now = millis();
+  checkButton();
+  if (state == STATE_ROLL) {
+    updateRoll();
+  }
+  updateDisplay();
 }
