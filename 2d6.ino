@@ -1,6 +1,6 @@
 #include <Entropy.h>
 
-#define VERSION "1"
+#define VERSION "2"
 
 // Updated each loop with the current time
 unsigned long now = millis();
@@ -50,13 +50,13 @@ byte ledPins[] = {
 
 // Transistor pin mapping
 byte transPins[] = {
-  10,	// Left LED display
-  11  // Right LED display
+  12,	// Left LED display
+  13  // Right LED display
 };
 
 // Button pin mapping
-byte rollButtonPin = 12;
-byte modeButtonPin = 13;
+byte rollButtonPin = 10;
+byte modeButtonPin = 11;
 
 // LED segment table for numbers. Row is the number to display.
 // Column is the LED segment index.
@@ -225,6 +225,12 @@ void updateMode() {
 byte rollButton = 1;
 byte modeButton = 1;
 
+// Mode button needs to be debounced. When a button change is
+// detected, set this variable to the earliest time it should
+// check again. Is zero when not debouncing.
+unsigned long debounceTime = 0;
+#define DEBOUNCE_INTERVAL 50
+
 void checkButton() {
   byte btn = digitalRead(rollButtonPin);
   if (rollButton != btn) {
@@ -236,10 +242,16 @@ void checkButton() {
   }
   btn = digitalRead(modeButtonPin);
   if (modeButton != btn) {
-    modeButton = btn;
-    // Don't allow a mode change while a roll is active
-    if (btn == 0 && state != STATE_ROLL) {
-      nextMode();
+    if (debounceTime == 0) {
+      debounceTime = now + DEBOUNCE_INTERVAL;
+    }
+    else if (now > debounceTime) {
+      debounceTime = 0;
+      modeButton = btn;
+      // Don't allow a mode change while a roll is active
+      if (btn == 0 && state != STATE_ROLL) {
+        nextMode();
+      }
     }
   }
 }
